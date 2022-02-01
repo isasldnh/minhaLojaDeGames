@@ -1,18 +1,23 @@
 package br.org.generation.minhaLojaDeGames.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -21,23 +26,33 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Produto implements Controller {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private long id;
 	
-	@NotNull
-	@Size (min=10, max=100)
+	@NotNull(message = "Nome é obrigatório!")                                       										
 	private String nome;
 	
-	@NotNull
-	@Size(min=10, max=1000)
+	@Size(max=500)
 	private String descricao;
 	
-	@NotNull
-	@Size(min=1, max=10)
-	private long preco;
+	@NotNull(message = "Console é obrigatório!")
+	private String console;
+	
+	private int quantidade;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@NotNull(message = "Preço é obrigatório!")
+	@Positive(message = "O preço deve ser maior do que zero!")
+	private BigDecimal preco;
+	
+	private String foto;
+
+	@ManyToOne
+	@JsonIgnoreProperties("produto")
+	private Categoria categoria;
 
 	public long getId() {
-		return id_produto;
+		return id;
 	}
 
 	public void setId(long id) {
@@ -60,12 +75,44 @@ public class Produto implements Controller {
 		this.descricao = descricao;
 	}
 
-	public long getPreco() {
+	public String getConsole() {
+		return console;
+	}
+
+	public void setConsole(String console) {
+		this.console = console;
+	}
+
+	public int getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public BigDecimal getPreco() {
 		return preco;
 	}
 
-	public void setPreco(long preco) {
+	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
+	}
+
+	public String getFoto() {
+		return this.foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 	@Override
@@ -73,6 +120,5 @@ public class Produto implements Controller {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 	
 }

@@ -20,52 +20,48 @@ import org.springframework.web.bind.annotation.RestController;
 import br.org.generation.minhaLojaDeGames.model.Produto;
 import br.org.generation.minhaLojaDeGames.repository.ProdutoRepository;
 
+
+
 @RestController
-@RequestMapping("/categorias")
+@RequestMapping("/produto")
 @CrossOrigin(origins = "*", allowedHeaders = "*") 
-public class ProdutoController<produtoRepository> {
+public class ProdutoController {
 	
 	@Autowired
-	private ProdutoRepository<Produto> produtoRepository;
-
+	private ProdutoRepository produtoRepository;
+	
 	@GetMapping
-	public ResponseEntity<Produto> getAll(){
+	public ResponseEntity<List<Produto>> getAll(){
 		return ResponseEntity.ok(produtoRepository.findAll());
 	}
 	
-	@GetMapping("/Produto/{id_produto}")
-	public ResponseEntity<Produto> getById(@PathVariable Long id_produto){
-		return produtoRepository.findById(id_produto)
-				.map (resp -> ResponseEntity.ok(resp))
+	@GetMapping("/{id}")
+	public ResponseEntity<Produto> getById (@PathVariable long id){
+		return produtoRepository.findById(id)
+				.map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
-	}
-	
-	@GetMapping("/Produto/{descricao}")
-	public ResponseEntity<List<Produto>> getByTitulo(@PathVariable String descricao){
-		return ResponseEntity.ok(produtoRepository.findAllByTituloContainingIgnoreCase(descricao));
-	}
+	}	
 	
 	@PostMapping
-	public ResponseEntity<List<Produto>> postProduto (@Valid @RequestBody Produto produto){
+	public ResponseEntity<Produto> postProduto (@Valid @RequestBody Produto produto){
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoRepository.save(produto));
 	}
 	
 	@PutMapping
 	public ResponseEntity<Produto> putProduto (@Valid @RequestBody Produto produto){
 		return produtoRepository.findById(produto.getId())
-				.map (resposta -> ResponseEntity.ok().body(produtoRepository).save(produto))
-				.orElse (ResponseEntity.notFound().build());
+				.map(resposta -> ResponseEntity.ok().body(produtoRepository.save(produto)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
-	@DeleteMapping("/Produto/{id}")
-	public ResponseEntity<?> deleteProduto (@PathVariable long id_produto){
-		return produtoRepository.findById(id_produto)
-				.map (resposta ->{
-					produtoRepository.deleteById(id_produto;
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteProduto(@PathVariable long id){
+		return produtoRepository.findById(id)
+				.map (resposta -> {
+					produtoRepository.deleteById(id);
 					return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 				})
-				.orElse (ResponseEntity.notFound().build());
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
-	
-} 
+}

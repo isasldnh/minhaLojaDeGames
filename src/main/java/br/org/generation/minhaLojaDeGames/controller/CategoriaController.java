@@ -26,7 +26,7 @@ import br.org.generation.minhaLojaDeGames.repository.CategoriaRepository;
 public class CategoriaController {
 	
 	@Autowired
-	private CategoriaRepository<Categoria> categoriaRepository;
+	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Categoria>> getAll(){
